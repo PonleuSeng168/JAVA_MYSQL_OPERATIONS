@@ -124,6 +124,153 @@
 	WindowEvent winclosevent = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
 	Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(winclosevent);
 
+# CRUD OPERATIONS WIHT CLASS
+	* First of all, going to create the class name first!
+	* Import packages
+		import java.sql.Connection;
+		import java.sql.PreparedStatement;
+		import java.sql.ResultSet;
+
+	* Connection 
+	    Connection cn;
+	    PreparedStatement pst;
+	    ResultSet rs;
+	    String sql;
+
+	* Declare Variable 
+	    public String exampleId;
+	    public String exampleName;
+
+	 * Generate Getter and Setter 
+		public String getExampleId() {
+	        return productId;
+	    }
+
+	    public void SetExampleId(String exampleId) {
+	        this.exampleId = exampleId;
+	    }
+
+# Insert, Update and Delete
+    public boolean insert() {
+    cn = ConnectionDB.getConnection();
+    boolean b = false;
+    sql = "INSERT INTO `example_db`(`category_id`, `supplier_id`) VALUES (?,?,?)";
+    try {
+        pst = cn.prepareStatement(sql);
+        pst.setString(1, exampleId);
+        pst.setString(2, exampleName);
+        // For image 
+        FileInputStream fis = new FileInputStream(new File(images));
+        pst.setBinaryStream(3, fis);
+        int row = pst.executeUpdate();
+        if (row > 0) {
+            b = true;
+            } else {
+                b = false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            b = false;
+        }
+        return b;
+    }
+
+# Get data and form load 
+    public TableModel selectRecord() {
+    cn = ConnectionDB.getConnection();
+    TableModel model = null;
+		sql = "SELECT * FROM `example_db`";
+        try {
+            pst = cn.prepareStatement(sql);
+            rs = pst.executeQuery();
+            model = DbUtils.resultSetToTableModel(rs);
+        } catch (Exception e) {
+            model = null;
+            e.printStackTrace();
+        }
+        return model;
+    }
+
+# Get data for jComboBox
+    public ResultSet selectComboBox() {
+        cn = ConnectionDB.getConnection();
+        ResultSet rssup;
+        sql = "SELECT CONCAT(id, \"-\", name) AS sup FROM `example_db`";
+        try {
+            pst = cn.prepareStatement(sql);
+            rs = pst.executeQuery();
+            rssup = rs;
+        } catch (Exception e) {
+            rssup = null;
+            e.printStackTrace();
+        }
+        return rssup;
+    }
+
+# Search 
+    public TableModel SeachByExample(String example) {
+        cn = ConnectionDB.getConnection();
+        TableModel model = null;
+		sql = "SELECT * FROM `example_db` WHERE barcode LIKE '%" + example + "%'";
+        try {
+            pst = cn.prepareStatement(sql);
+            rs = pst.executeQuery();
+            model = DbUtils.resultSetToTableModel(rs);
+        } catch (Exception e) {
+            model = null;
+            e.printStackTrace();
+        }
+        return model;
+    }	
+
+# Java Forms
+# How to load data from class to jComboBox 
+    ResultSet rss;
+    rss = pro.selectJComBoBox();
+    try {
+        while (rss.next()) {
+            String jcombox = rss.getString("jcombox");
+            cbo_jcombox.addItem(jcombox);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+# How to load default Image 
+	ImageIcon imageIcon = new ImageIcon(new ImageIcon(this.getClass().getResource("/image/No_Image_Available.jpg")).getImage().getScaledInstance(txt_example_img.getWidth(), txt_example_img.getHeight(), Image.SCALE_DEFAULT));
+	txt_example_img.setIcon(imageIcon);	   
+
+# How to hide column in jTable 
+    void hideColumn() {
+        TableColumnModel tcm = tbl_example.getColumnModel();
+        tbl_products.removeColumn(tcm.getColumn(0));
+        tbl_products.removeColumn(tcm.getColumn(1));
+    }
+
+# How to save data from input form to database 
+    void subSetData() {
+        pro.exampletId = txt_example_id.getText();
+
+        String example = cbo_example.getSelectedItem().toString();
+        String[] example1 = example.split("-");
+        pro.exampleId = example1[0];
+
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(new File(pathname));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        pro.images = pathname;
+    }
+    
+# How to search data in form by KeyReleased event 
+    if (cbo_find_example.getSelectedItem().equals("example")) {
+        tbl_examples.setModel(pro.SeachByExample(txt_find_example.getText()));
+    }
+
+
+
 
 
 
