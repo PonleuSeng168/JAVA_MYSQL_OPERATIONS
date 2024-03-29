@@ -28,11 +28,11 @@ public class Connection_Name {
 	import java.sql.ResultSet;
 
 # Add New
-o	For clear data when add new data on form
++ For clear data when add new data on form
     private void clearData(){
         txt_name_id.setText("");
     }
-o	Forget latest ID from database. 
++ Forget latest ID from database. 
     private void getMax(){
         sql = "SELECT MAX(id) alias_name FROM db_name";
         try {
