@@ -154,7 +154,7 @@
     public boolean insert() {
     cn = ConnectionDB.getConnection();
     boolean b = false;
-    sql = "INSERT INTO `example_db`(`category_id`, `supplier_id`) VALUES (?,?,?)";
+    sql = "INSERT INTO `example_db`(example_id, example_name, image) VALUES (?,?,?)";
     try {
         pst = cn.prepareStatement(sql);
         pst.setString(1, exampleId);
@@ -162,6 +162,7 @@
         // For image 
         FileInputStream fis = new FileInputStream(new File(images));
         pst.setBinaryStream(3, fis);
+        
         int row = pst.executeUpdate();
         if (row > 0) {
             b = true;
@@ -263,7 +264,7 @@
         }
         pro.images = pathname;
     }
-    
+
 # How to search data in form by KeyReleased event 
     if (cbo_find_example.getSelectedItem().equals("example")) {
         tbl_examples.setModel(pro.SeachByExample(txt_find_example.getText()));
