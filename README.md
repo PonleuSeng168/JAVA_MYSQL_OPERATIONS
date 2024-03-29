@@ -81,7 +81,7 @@
 	            e.printStackTrace();
 	        }
 
-# Get data from jTable for paste data to form for update and delete
+# Get data from jTable for pass data to input form for update and delete
     int rows = txt_jTable.getSelectedRow();
     txt_example_id.setText(model.getValueAt(rows, 0).toString());
 	txt_example_name.setText(model.getValueAt(rows, 0).toString());
