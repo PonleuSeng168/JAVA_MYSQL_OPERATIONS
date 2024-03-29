@@ -63,10 +63,10 @@ public class Connection_Name {
     }
 
 # Insert 
-o	Get data from input form. 
+# Get data from input form. 
         String example_name = txt_example _name.getText();
 		sql = "INSERT INTO `example_db`(`example_name`) VALUES ('"+ example_name +"')";
-o	Save to database. 
+# Save to database. 
         try {
             pst = cn.prepareStatement(sql);
             int rows = pst.executeUpdate();
